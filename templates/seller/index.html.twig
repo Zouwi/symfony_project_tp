@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Seller index{% endblock %}
+
+{% block body %}
+    <div style="background: #09c; color: white; padding: 10px; border-radius: 20px; text-align: center; margin-bottom: 30px;">
+        <div class="display-4" style="font-size: 30pt; margin: 0 0 20px 0">Seller index</div>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_blog') }}">Blog</a>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_produits') }}">Produits</a>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_login') }}">Se connecter</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Duration</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for seller in sellers %}
+            <tr>
+                <td>{{ seller.id }}</td>
+                <td>{{ seller.title }}</td>
+                <td>{{ seller.duration }}</td>
+                <td>
+                    <a href="{{ path('app_seller_show', {'id': seller.id}) }}">show</a>
+                    <a href="{{ path('app_seller_edit', {'id': seller.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_seller_new') }}">Create new</a>
+{% endblock %}
