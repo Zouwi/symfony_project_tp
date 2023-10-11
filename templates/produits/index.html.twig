@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits gaming{% endblock %}
+
+{% block body %}
+    <div style="background: #09c; color: white; padding: 10px; border-radius: 20px; text-align: center; margin-bottom: 30px;">
+        <div class="display-4" style="font-size: 30pt; margin: 0 0 20px 0">Nos produits gaming</div>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_blog') }}">Blog</a>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_produits') }}">Produits</a>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_login') }}">Se connecter</a>
+    </div>
+
+    <div style="display: flex; gap: 30px;">
+        {% for produit in produits %}
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{{ vich_uploader_asset(produit) }}" alt="{{ produit.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ produit.title }}</h5>
+                    <p style="background: #09c; padding: 5px 20px 5px 20px; border-radius: 5px; color: white; width: fit-content" class="card-text">{{ produit.price }}€</p>
+                    <p class="card-text">Vendu par {{ produit.seller}}</p>
+                    <a href="{{ path('app_produit_detail', {id:produit.id}) }}" class="btn btn-primary">Voir plus</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

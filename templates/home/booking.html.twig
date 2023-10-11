@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ seller.title }}{% endblock %}
+
+{% block body %}
+        <style>
+                .available {
+                cursor: pointer;
+                }
+                .booked-with-stripe {
+                        background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 50%, #ccc 50%, #ccc 75%, transparent 75%, transparent);
+                        background-size: 40px 40px;
+                }
+        </style>
+        <div style="background: #09c; color: white; padding: 10px; border-radius: 20px; text-align: center; margin-bottom: 30px;">
+                <div class="display-4" style="font-size: 30pt; margin: 0 0 20px 0">Prendre rendez-vous</div>
+                <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_blog') }}">Blog</a>
+                <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_produits') }}">Produits</a>
+                <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_login') }}">Se connecter</a>
+        </div>
+        <div style="font-size: 20pt" class="display-3 fw-bold mb-3 ls-sm ">
+        {{ seller.title }}
+        </div>
+        <div style="display: flex; margin: auto;">
+        <a class="btn btn-primary" style="margin: auto auto auto 0;" href="{{ path('app_seller_booking', {id:seller.id, week: currentWeek -1}) }}">Semaine précédente</a>
+        <a class="btn btn-primary" style="margin: auto 0 auto auto;" href="{{ path('app_seller_booking', {id:seller.id, week: currentWeek +1}) }}">Semaine suivante</a>
+        </div>
+        <table id="timeSlots" class="table table-bordered" style="margin-top: 20px">
+                <thead>
+                <tr>
+                        <th>Heure</th>
+                        {% for date in weekDates %}
+                                <th>{{ date }}</th>
+                        {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for time in weekSlot.times %}
+                        <tr>
+                                <td>{{ time }}</td>
+                                {% for day in weekSlot.days %}
+                                        {% set isBooked = bookedSlots[day][time] ?? false %}
+                                        <td class="{{ isBooked ? 'booked-with-stripe' : 'available' }}"
+                                                {% if not isBooked %}
+                                                        data-bs-toggle="modal" data-bs-target="#exampleModal" data-day="{{ day }}" data-time="{{ time }}"
+                                                {% endif %}
+                                        >
+                                                &nbsp;
+                                        </td>
+                                {% endfor %}
+                        </tr>
+                {% endfor %}
+                </tbody>
+        </table>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">RVD du vendeur {{ seller.title }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                {{ form_start(form) }}
+                                <div class="modal-body">
+                                        {{ form_widget(form) }}
+                                </div>
+                                <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Prendre RDV</button>
+                                </div>
+                                {{ form_end(form) }}
+                        </div>
+                </div>
+        </div>
+        <script>
+                document.addEventListener("DOMContentLoaded", ()=>{
+                        let exampleModal = document.getElementById('exampleModal');
+
+                        exampleModal.addEventListener('show.bs.modal', (event)=>{
+                                let button = event.relatedTarget;
+                                let day = button.getAttribute('data-day');
+                                let time = button.getAttribute('data-time');
+
+                                document.getElementById('booking_day').value = day;
+                                document.getElementById('booking_time').value = time;
+                        })
+                })
+        </script>
+{% endblock %}

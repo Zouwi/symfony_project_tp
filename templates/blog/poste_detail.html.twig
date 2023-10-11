@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Le poste{% endblock %}
+
+{% block body %}
+    <div style="background: #09c; color: white; padding: 10px; border-radius: 20px; text-align: center; margin-bottom: 30px;">
+        <div class="display-4" style="font-size: 30pt; margin: 0 0 20px 0">{{ poste.name }}</div>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_blog') }}">Blog</a>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_produits') }}">Produits</a>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_login') }}">Se connecter</a>
+    </div>
+    <div>Posté par {{ poste.author }}</div>
+    <div>{{ poste.date | date('Y-m-d') }}</div>
+    <img style="width: 700px; margin: 30px;" src="{{ vich_uploader_asset(poste) }}" alt="{{ poste.name }}">
+    <div>
+        {{ poste.content | raw}}
+    </div>
+    <div style="font-size: 30pt" class="display-4 fw-bold mb-3 ls-sm ">
+        Commentaires
+    </div>
+    {% for comment in poste.comments %}
+        <div style="display: grid; grid-template-columns: 800px auto auto; justify-content: center;">
+        <div style="background: #09C; margin: 10px; color: white; border-radius: 5px; padding: 10px;">
+    <div style="background: #caf0f8; color: black; width: fit-content; border-radius: 20px; padding: 5px 15px 5px 15px"> {{ comment.sujet }}</div>
+    <div>{{ comment.content }}</div>
+            <div style="margin: 20px 0 0 0; font-weight: bold">
+            {{ likesCounts[comment.id]['likes'] }} Likes
+            {{ likesCounts[comment.id]['dislikes'] }} Dislikes
+            </div>
+        </div>
+        <a style="margin: 0 5px 0 0" href="{{ path('app_blog_like_comment', {'id': poste.id, 'commentId': comment.id, 'slug': poste.slug}) }}">
+        <button type="submit" class="btn btn-primary">Like</button>
+        </a>
+        <a style="margin: 0 5px 0 0" href="{{ path('app_blog_dislike_comment', {'id': poste.id, 'commentId': comment.id, 'slug': poste.slug}) }}">
+            <button type="submit" class="btn btn-danger">Dislike</button>
+        </a>
+
+        </div>
+    {% endfor %}
+    <div style="font-size: 30pt" class="display-4 fw-bold mb-3 ls-sm ">
+        Envoyer un commentaire
+    </div>
+    {% if app.user is defined and app.user is not null%}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary">{{ button_label|default('Envoyer') }}</button>
+        {{ form_end(form) }}
+
+    {% else %}
+        <a href="{{ path('app_login') }}">Connectez vous pour commenter</a>
+    {% endif %}
+{% endblock %}

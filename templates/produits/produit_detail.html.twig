@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}Le produit{% endblock %}
+
+{% block body %}
+    <div style="background: #09c; color: white; padding: 10px; border-radius: 20px; text-align: center; margin-bottom: 30px;">
+        <div class="display-4" style="font-size: 30pt; margin: 0 0 20px 0">{{ produit.title }}</div>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_blog') }}">Blog</a>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_produits') }}">Produits</a>
+        <a style="text-decoration: none; background: white; padding: 5px 20px 5px 20px; border-radius: 5px; color: black" href="{{ path('app_login') }}">Se connecter</a>
+    </div>
+    <div>Vendu par {{ produit.seller }}</div>
+    <img style="width: 700px; margin: 30px;" src="{{ vich_uploader_asset(produit) }}" alt="{{ produit.title }}">
+    <div>
+        {{ produit.description | raw}}
+    </div>
+    <div style="font-size: 20pt; margin: 20px;" class="btn btn-primary">Prix : {{ produit.price }}</div>
+    <div style="font-size: 20pt; margin: 20px;" class="btn btn-warning">Acheter</div>
+{% endblock %}
